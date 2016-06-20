@@ -1,0 +1,76 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="question-detail">
+
+  <template>
+
+    <style></style>
+
+    <iron-ajax
+      auto
+      url="{{_questionUrl(id)}}"
+      handle-as="json"
+      on-response="handleResponse"></iron-ajax>
+
+    <iron-ajax
+      id="removeElement"
+      url="{{_questionUrl(id)}}"
+      headers='{"Content-Type": "application/json;charset=utf-8"}'
+      handle-as="json"
+      method="DELETE"
+      on-response="handleRemove"></iron-ajax>
+
+    <h1>{{question.name}}</h1>
+
+    <h2>Labels</h2>
+
+    <ul>
+      <template is="dom-repeat" items="{{labels}}">
+        <li>{{item.lang}}: {{item.value}}</li>
+      </template>
+    </ul>
+
+    <a href="#/">Back</a>
+    <a href="#/{{question.id}}/edit">Edit</a>
+    <button on-tap="remove">Remove</button>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'question-detail',
+      properties: {
+        question: Object,
+        labels: {
+          type: Array,
+          value: function() { return []; },
+          notify: true
+        }
+      },
+      handleResponse: function (data) {
+        this.question = data.detail.response;
+
+        var tmp = [];
+        for (var key in this.question.labels) {
+          if (!this.question.labels.hasOwnProperty(key)) continue;
+          tmp.push({
+            lang: key,
+            value: this.question.labels[key]
+          });
+        }
+        this.labels = tmp;
+      },
+      remove: function () {
+        this.$.removeElement.generateRequest();
+      },
+      handleRemove: function () {
+        document.querySelector('app-router').go('/');
+      },
+      _questionUrl: function (id) {
+        return 'http://127.0.0.1:3000/questions/' + id;
+      }
+    });
+  </script>
+
+</dom-module>

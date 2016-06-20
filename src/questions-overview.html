@@ -1,0 +1,42 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="questions-overview">
+
+  <template>
+
+    <style></style>
+
+    <iron-ajax
+      auto
+      url="http://127.0.0.1:3000/questions"
+      handle-as="json"
+      on-response="handleResponse"></iron-ajax>
+
+    <h1>Questions</h1>
+
+    <template is="dom-repeat" items="{{questions}}" sort="sortFunction">
+      <div>
+        <h2>
+          <a href="#/{{item.id}}">{{item.name}}</a>
+        </h2>
+      </div>
+    </template>
+
+    <a href="#/new">New</a>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'questions-overview',
+      handleResponse: function (data) {
+        this.questions = data.detail.response;
+      },
+      sortFunction: function (a, b) {
+        return a.id - b.id;
+      }
+    });
+  </script>
+
+</dom-module>

@@ -1,0 +1,134 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="question-edit">
+
+  <template>
+
+    <style></style>
+
+    <iron-ajax
+      auto
+      url="{{_questionUrl(id)}}"
+      handle-as="json"
+      on-response="handleRead"></iron-ajax>
+
+    <iron-ajax
+      id="updateElement"
+      url="{{_questionUrl(id)}}"
+      headers='{"Content-Type": "application/json;charset=utf-8"}'
+      handle-as="json"
+      method="PUT"
+      body="{{payload}}"
+      on-response="handleUpdate"></iron-ajax>
+
+    <h1>{{question.name}}</h1>
+
+    <label>
+      Name:
+      <input type="text" value="{{question.name::input}}">
+    </label>
+
+    <h2>Labels</h2>
+
+    <ul>
+      <template is="dom-repeat" items="{{labels}}">
+        <li>
+          <label>
+            Language: {{item.lang}}
+          </label>
+          <label>
+            Value:
+            <input type="text" value="{{item.value::input}}">
+          </label>
+          <button on-tap="removeLabel" data-lang$="{{item.lang}}">X</button>
+        </li>
+      </template>
+    </ul>
+
+    <h2>New label</h2>
+
+    <label>
+      Language:
+      <input type="text" value="{{newLang::input}}">
+    </label>
+    <label>
+      Value:
+      <input type="text" value="{{newValue::input}}">
+    </label>
+    <button on-tap="addLabel">Add label</button>
+
+    <br>
+    <br>
+
+    <a href="#/{{id}}">Cancel</a>
+    <button on-tap="save">Save</button>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'question-edit',
+      properties: {
+        question: {
+          type: Object,
+          notify: true
+        },
+        labels: {
+          type: Array,
+          notify: true
+        }
+      },
+      handleRead: function (data) {
+        this.question = data.detail.response;
+
+        var tmp = [];
+        for (var key in this.question.labels) {
+          if (!this.question.labels.hasOwnProperty(key)) continue;
+          tmp.push({
+            lang: key,
+            value: this.question.labels[key]
+          });
+        }
+        this.labels = tmp;
+      },
+      handleUpdate: function () {
+        document.querySelector('app-router').go('/' + this.id);
+      },
+      addLabel: function () {
+        this.labels.push({
+          lang: this.newLang,
+          value: this.newValue
+        });
+        this.newLang = '';
+        this.newValue = '';
+        this.notifyPath('labels', this.labels.slice());
+      },
+      removeLabel: function (e) {
+        var lang = e.target.dataset.lang;;
+        this.labels = this.labels.filter(function (l) {
+          return l.lang !== lang;
+        });
+        this.notifyPath('labels', this.labels.slice());
+      },
+      save: function() {
+        var payload = this.question;
+
+        payload.labels = {};
+
+        for (var i = 0; i < this.labels.length; i++) {
+          var label = this.labels[i];
+          payload.labels[label.lang] = label.value;
+        }
+
+        this.payload = JSON.stringify(payload);
+
+        this.$.updateElement.generateRequest();
+      },
+      _questionUrl: function (id) {
+        return 'http://127.0.0.1:3000/questions/' + id;
+      }
+    });
+  </script>
+
+</dom-module>

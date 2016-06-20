@@ -1,0 +1,20 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>bpt-polymer</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/manifest.json">
+    <script src="/bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="/bower_components/app-router/app-router.html">
+  </head>
+  <body>
+    <app-router mode="hash">
+      <app-route path="/" import="/src/questions-overview.html"></app-route>
+      <app-route path="/new" import="/src/question-create.html"></app-route>
+      <app-route path="/:id/edit" import="/src/question-edit.html"></app-route>
+      <app-route path="/:id" import="/src/question-detail.html"></app-route>
+    </app-router>
+  </body>
+</html>
