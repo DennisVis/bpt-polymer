@@ -5,21 +5,9 @@
 
   <template>
 
-    <style></style>
+    <iron-ajax auto url="{{_questionUrl(id)}}" handle-as="json" on-response="handleResponse"></iron-ajax>
 
-    <iron-ajax
-      auto
-      url="{{_questionUrl(id)}}"
-      handle-as="json"
-      on-response="handleResponse"></iron-ajax>
-
-    <iron-ajax
-      id="removeElement"
-      url="{{_questionUrl(id)}}"
-      headers='{"Content-Type": "application/json;charset=utf-8"}'
-      handle-as="json"
-      method="DELETE"
-      on-response="handleRemove"></iron-ajax>
+    <iron-ajax id="removeElement" url="{{_questionUrl(id)}}" headers='{"Content-Type": "application/json;charset=utf-8"}' handle-as="json" method="DELETE" on-response="handleRemove"></iron-ajax>
 
     <h1>{{question.name}}</h1>
 
@@ -68,7 +56,7 @@
         document.querySelector('app-router').go('/');
       },
       _questionUrl: function (id) {
-        return 'http://127.0.0.1:3000/questions/' + id;
+        return 'http://localhost:3000/questions/' + id;
       }
     });
   </script>

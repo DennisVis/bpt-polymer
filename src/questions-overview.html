@@ -5,22 +5,12 @@
 
   <template>
 
-    <style></style>
-
-    <iron-ajax
-      auto
-      url="http://127.0.0.1:3000/questions"
-      handle-as="json"
-      on-response="handleResponse"></iron-ajax>
+    <iron-ajax auto url="http://localhost:3000/questions" handle-as="json" on-response="handleResponse"></iron-ajax>
 
     <h1>Questions</h1>
 
     <template is="dom-repeat" items="{{questions}}" sort="sortFunction">
-      <div>
-        <h2>
-          <a href="#/{{item.id}}">{{item.name}}</a>
-        </h2>
-      </div>
+      <div><h2><a href="#/{{item.id}}">{{item.name}}</a></h2></div>
     </template>
 
     <a href="#/new">New</a>

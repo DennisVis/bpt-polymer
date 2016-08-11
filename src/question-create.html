@@ -5,36 +5,19 @@
 
   <template>
 
-    <style></style>
-
-    <iron-ajax
-      id="createElement"
-      url="http://127.0.0.1:3000/questions"
-      headers='{"Content-Type": "application/json;charset=utf-8"}'
-      handle-as="json"
-      method="POST"
-      body="{{payload}}"
-      on-response="handleCreate"></iron-ajax>
+    <iron-ajax id="createElement" url="http://localhost:3000/questions" headers='{"Content-Type": "application/json;charset=utf-8"}' handle-as="json" method="POST" body="{{payload}}" on-response="handleCreate"></iron-ajax>
 
     <h1>{{question.name}}</h1>
 
-    <label>
-      Name:
-      <input type="text" value="{{question.name::input}}">
-    </label>
+    <label>Name:<input type="text" value="{{question.name::input}}"></label>
 
     <h2>Labels</h2>
 
     <ul>
       <template is="dom-repeat" items="{{labels}}">
         <li>
-          <label>
-            Language: {{item.lang}}
-          </label>
-          <label>
-            Value:
-            <input type="text" value="{{item.value::input}}">
-          </label>
+          <label>Language: {{item.lang}}</label>
+          <label>Value: <input type="text" value="{{item.value::input}}"></label>
           <button on-tap="removeLabel" data-lang$="{{item.lang}}">X</button>
         </li>
       </template>
@@ -42,14 +25,8 @@
 
     <h2>New label</h2>
 
-    <label>
-      Language:
-      <input type="text" value="{{newLang::input}}">
-    </label>
-    <label>
-      Value:
-      <input type="text" value="{{newValue::input}}">
-    </label>
+    <label>Language: <input type="text" value="{{newLang::input}}"></label>
+    <label>Value: <input type="text" value="{{newValue::input}}"></label>
     <button on-tap="addLabel">Add label</button>
 
     <br>
